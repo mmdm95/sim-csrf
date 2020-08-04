@@ -55,10 +55,10 @@ class Csrf implements ICsrf
      *
      * @param string|null $name
      * @param string|null $input_name
-     * @return mixed
+     * @return string
      * @throws \Exception
      */
-    public function getField(string $name = null, string $input_name = null)
+    public function getField(string $name = null, string $input_name = null): string
     {
         $token = $this->getToken($name);
         $input_name = $input_name ?? $this->input_name;
@@ -69,10 +69,10 @@ class Csrf implements ICsrf
      * Just give CSRF token
      *
      * @param string|null $name
-     * @return mixed
+     * @return string
      * @throws \Exception
      */
-    public function getToken(string $name = null)
+    public function getToken(string $name = null): string
     {
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
@@ -92,10 +92,10 @@ class Csrf implements ICsrf
      * Regenerate Token
      *
      * @param string|null $name
-     * @return mixed
+     * @return string
      * @throws \Exception
      */
-    public function regenerateToken(string $name = null)
+    public function regenerateToken(string $name = null): string
     {
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
@@ -169,7 +169,7 @@ class Csrf implements ICsrf
         }
 
         $token = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $token = uniqid(substr($token, random_int(0, strlen($token) - 7), 6), true);
+        $token = uniqid(str_shuffle(substr($token, random_int(0, strlen($token) - 7), 6)), true);
         return base64_encode(str_shuffle($token));
     }
 
