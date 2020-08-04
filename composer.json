@@ -1,20 +1,21 @@
 {
-    "name": "mmdm/sim-csrf",
-    "description": "A simple yet nice CSRF library",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "MMDM",
-            "email": "mmdehghan95@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Sim\\Csrf\\": "src/"
-        }
-    },
-    "require": {
-        "php": ">=7.2"
+  "name": "mmdm/sim-csrf",
+  "description": "A simple yet nice CSRF library",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "MMDM",
+      "email": "mmdehghan95@gmail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sim\\Csrf\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.2",
+    "ext-openssl": "*"
+  }
 }
