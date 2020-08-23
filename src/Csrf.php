@@ -58,7 +58,7 @@ class Csrf implements ICsrf
      * @return string
      * @throws \Exception
      */
-    public function getField(string $name = null, string $input_name = null): string
+    public function getField(?string $name = null, ?string $input_name = null): string
     {
         $token = $this->getToken($name);
         $input_name = $input_name ?? $this->input_name;
@@ -72,7 +72,7 @@ class Csrf implements ICsrf
      * @return string
      * @throws \Exception
      */
-    public function getToken(string $name = null): string
+    public function getToken(?string $name = null): string
     {
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
@@ -179,7 +179,7 @@ class Csrf implements ICsrf
      * @param string|null $name
      * @return string
      */
-    protected function hashName($name = null)
+    protected function hashName(?string $name = null)
     {
         return sha1(strtolower($name ?? $this->default_name));
     }
