@@ -35,10 +35,7 @@ class Csrf implements ICsrf
     }
 
     /**
-     * Set ttl for CSRF token
-     *
-     * @param int $timeout - in seconds
-     * @return Csrf
+     * {@inheritdoc}
      */
     public function setExpiration(int $timeout): ICsrf
     {
@@ -51,11 +48,7 @@ class Csrf implements ICsrf
     }
 
     /**
-     * Get hidden HTML input element for CSRF field
-     *
-     * @param string|null $name
-     * @param string|null $input_name
-     * @return string
+     * {@inheritdoc}
      * @throws \Exception
      */
     public function getField(?string $name = null, ?string $input_name = null): string
@@ -66,10 +59,7 @@ class Csrf implements ICsrf
     }
 
     /**
-     * Just give CSRF token
-     *
-     * @param string|null $name
-     * @return string
+     * {@inheritdoc}
      * @throws \Exception
      */
     public function getToken(?string $name = null): string
@@ -89,13 +79,10 @@ class Csrf implements ICsrf
     }
 
     /**
-     * Regenerate Token
-     *
-     * @param string|null $name
-     * @return string
+     * {@inheritdoc}
      * @throws \Exception
      */
-    public function regenerateToken(string $name = null): string
+    public function regenerateToken(?string $name = null): string
     {
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
@@ -105,11 +92,7 @@ class Csrf implements ICsrf
     }
 
     /**
-     * Validate a token with optional name
-     *
-     * @param $token
-     * @param null $name
-     * @return bool
+     * {@inheritdoc}
      * @throws \Exception
      */
     public function validate($token, $name = null): bool
@@ -119,9 +102,7 @@ class Csrf implements ICsrf
     }
 
     /**
-     * Clear all generated tokens
-     *
-     * @return ICsrf
+     * {@inheritdoc}
      */
     public function clear(): ICsrf
     {
