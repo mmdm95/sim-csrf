@@ -3,6 +3,7 @@
 use Sim\Csrf\Csrf;
 
 include_once '../../vendor/autoload.php';
+//include_once '../../autoloader.php';
 
 $csrf = new Csrf();
 
