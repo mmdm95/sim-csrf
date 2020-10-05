@@ -19,7 +19,7 @@ interface ICsrf
      * @param string|null $input_name
      * @return string
      */
-    public function getField(string $name = null, string $input_name = null): string;
+    public function getField(?string $name = null, ?string $input_name = null): string;
 
     /**
      * Just give CSRF token
@@ -27,7 +27,7 @@ interface ICsrf
      * @param string|null $name
      * @return string
      */
-    public function getToken(string $name = null): string;
+    public function getToken(?string $name = null): string;
 
     /**
      * Regenerate Token
@@ -35,7 +35,7 @@ interface ICsrf
      * @param string|null $name
      * @return string
      */
-    public function regenerateToken(string $name = null): string;
+    public function regenerateToken(?string $name = null): string;
 
     /**
      * Validate a token with optional name
