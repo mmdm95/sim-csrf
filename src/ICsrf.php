@@ -2,8 +2,21 @@
 
 namespace Sim\Csrf;
 
+use Sim\Csrf\Storage\ICsrfStorage;
+
 interface ICsrf
 {
+    /**
+     * @param ICsrfStorage $storage
+     * @return ICsrf
+     */
+    public function setStorage(ICsrfStorage $storage): ICsrf;
+
+    /**
+     * @return ICsrfStorage
+     */
+    public function getStorage(): ICsrfStorage;
+
     /**
      * Set ttl for CSRF token
      *

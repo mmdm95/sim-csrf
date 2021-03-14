@@ -2,36 +2,72 @@
 
 namespace Sim\Csrf;
 
+use Sim\Csrf\Storage\CsrfSessionStorage;
+use Sim\Csrf\Storage\ICsrfStorage;
 use Sim\Csrf\Utils\CsrfUtil;
 
 class Csrf implements ICsrf
 {
     /**
-     * @var int $timeout
+     * Storage types
+     */
+    const STORAGE_TYPE_SESSION = 1;
+    const STORAGE_TYPE_CUSTOM = 2;
+
+    /**
+     * @var int
      */
     protected $timeout = 300;
 
     /**
-     * @var string $default_name
+     * @var string
      */
     protected $default_name = 'default';
 
     /**
-     * @var string $input_name
+     * @var string
      */
     protected $input_name = 'csrftoken';
 
     /**
-     * @var string $token_session_name
+     * @var string
      */
     protected $token_session_name = '__simplicity_csrf_tokens_';
 
     /**
-     * Csrf constructor.
+     * @var ICsrfStorage
      */
-    public function __construct()
+    protected $storage;
+
+    /**
+     * Csrf constructor.
+     * @param ICsrfStorage|null $storage
+     */
+    public function __construct(ICsrfStorage $storage = null)
     {
+        if (!is_null($storage)) {
+            $this->storage = $storage;
+        } else {
+            $this->storage = new CsrfSessionStorage();
+        }
         $this->init();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setStorage(ICsrfStorage $storage): ICsrf
+    {
+        $this->storage = $storage;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStorage(): ICsrfStorage
+    {
+        return $this->storage;
     }
 
     /**
@@ -66,8 +102,8 @@ class Csrf implements ICsrf
     {
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
-        if (CsrfUtil::hasTimedSession($this->_dotConcatenation($this->token_session_name, $hashed))) {
-            $token = CsrfUtil::getTimedSession($this->_dotConcatenation($this->token_session_name, $hashed));
+        if ($this->storage->has($this->_dotConcatenation($this->token_session_name, $hashed))) {
+            $token = $this->storage->get($this->_dotConcatenation($this->token_session_name, $hashed));
             // alternative of no token in previous access
             if (is_null($token) || empty($token)) {
                 $token = $this->regenerateToken($name);
@@ -87,7 +123,7 @@ class Csrf implements ICsrf
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
         $token = $this->generateToken();
-        CsrfUtil::setTimesSession($this->_dotConcatenation($this->token_session_name, $hashed), $token, $this->timeout);
+        $this->storage->set($this->_dotConcatenation($this->token_session_name, $hashed), $token, $this->timeout);
         return $token;
     }
 
@@ -106,7 +142,7 @@ class Csrf implements ICsrf
      */
     public function clear(): ICsrf
     {
-        $_SESSION[$this->token_session_name] = [];
+        $this->storage->clear($this->token_session_name);
         return $this;
     }
 
@@ -115,11 +151,13 @@ class Csrf implements ICsrf
      */
     protected function init()
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        if (!isset($_SESSION[$this->token_session_name])) {
-            $_SESSION[$this->token_session_name] = [];
+        if ($this->storage instanceof CsrfSessionStorage) {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            if (!isset($_SESSION[$this->token_session_name])) {
+                $_SESSION[$this->token_session_name] = [];
+            }
         }
     }
 
