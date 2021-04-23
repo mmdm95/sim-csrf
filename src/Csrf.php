@@ -158,6 +158,7 @@ class Csrf implements ICsrf
     {
         $ownToken = $this->getToken($name);
         $res = !is_null($token) && $ownToken === $token;
+        $hashed = $this->hashName($name);
         if ($res && $this->extend_timeout) {
             $this->storage->extend($this->_dotConcatenation($this->token_session_name, $hashed), $this->timeout);
         }
