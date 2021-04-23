@@ -26,6 +26,21 @@ interface ICsrf
     public function setExpiration(int $timeout): ICsrf;
 
     /**
+     * Get ttl of CSRF token
+     *
+     * @return int
+     */
+    public function getExpiration(): int;
+
+    /**
+     * Extend expiration ttl or not
+     *
+     * @param bool $answer
+     * @return static
+     */
+    public function extendExpiration(bool $answer = true);
+
+    /**
      * Get hidden HTML input element for CSRF field
      *
      * @param string|null $name

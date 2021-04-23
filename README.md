@@ -96,6 +96,33 @@ $token2 = $csrf->setExpiration(300)->getToken();
 $token3 = $csrf->getToken();
 ```
 
+- getExpiration(): int
+
+Get expiration time.
+
+```php
+// an integer value in seconds like 300
+$timeout = $csrf->getExpiration();
+```
+
+- extendExpiration(bool $answer = true)
+
+By default it'll extend timeout of csrf if implemented in storage 
+class or if you want to prevent this behavior you can send `false` 
+to this method.
+
+> **Important Note:** If you set expiration to 7200 seconds(2 hours) 
+and extend functionality is on, after each successful csrf validation, 
+it'll extend the expiration. It means you have 3600 seconds left 
+for example and a form has been submitted, now you have 7200 seconds 
+again because you did not off extend functionality but if you turn 
+this functionality off or you have a custom csrf stroge that did 
+not implement any functionality in extend method, now if you have 
+3600 seconds expiration time and submit a form, you have 3600 seconds 
+left and time not extended.
+
+> Added from v1.2.0
+
 - getField(string $name = null, string $input_name = null): string
 
 This method will return input with type hidden and value of token. 
@@ -181,6 +208,15 @@ interface ICsrfStorage
      * @return ICsrfStorage
      */
     public function remove($key): ICsrfStorage;
+
+    /**
+     * Extend CSRF timeout if you want to
+     *
+     * @param $key
+     * @param int $expiration
+     * @return ICsrfStorage
+     */
+    public function extend($key, int $expiration): ICsrfStorage;
 
     /**
      * Remove all stored tokens

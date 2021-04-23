@@ -40,6 +40,11 @@ class Csrf implements ICsrf
     protected $storage;
 
     /**
+     * @var bool
+     */
+    protected $extend_timeout = true;
+
+    /**
      * Csrf constructor.
      * @param ICsrfStorage|null $storage
      */
@@ -85,6 +90,24 @@ class Csrf implements ICsrf
 
     /**
      * {@inheritdoc}
+     */
+    public function getExpiration(): int
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function extendExpiration(bool $answer = true)
+    {
+        $this->extend_timeout = $answer;
+        return $this;
+    }
+
+
+    /**
+     * {@inheritdoc}
      * @throws \Exception
      */
     public function getField(?string $name = null, ?string $input_name = null): string
@@ -103,7 +126,7 @@ class Csrf implements ICsrf
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
         if ($this->storage->has($this->_dotConcatenation($this->token_session_name, $hashed))) {
-            $token = $this->storage->get($this->_dotConcatenation($this->token_session_name, $hashed));
+            $token = $this->storage->get($this->_dotConcatenation($this->token_session_name, $hashed), $this->timeout);
             // alternative of no token in previous access
             if (is_null($token) || empty($token)) {
                 $token = $this->regenerateToken($name);
@@ -134,7 +157,11 @@ class Csrf implements ICsrf
     public function validate($token, $name = null): bool
     {
         $ownToken = $this->getToken($name);
-        return !is_null($token) && $ownToken === $token;
+        $res = !is_null($token) && $ownToken === $token;
+        if ($res && $this->extend_timeout) {
+            $this->storage->extend($this->_dotConcatenation($this->token_session_name, $hashed), $this->timeout);
+        }
+        return $res;
     }
 
     /**

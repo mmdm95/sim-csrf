@@ -31,6 +31,13 @@ interface ICsrfStorage
     public function remove($key): ICsrfStorage;
 
     /**
+     * @param $key
+     * @param int $expiration
+     * @return ICsrfStorage
+     */
+    public function extend($key, int $expiration): ICsrfStorage;
+
+    /**
      * Remove all stored tokens
      *
      * @param string $prefix
