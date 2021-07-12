@@ -52,7 +52,7 @@ class CsrfSessionStorage implements ICsrfStorage
                 if (!empty($expiration) && (int)$expiration > 0) {
                     $token = $res['data'] ?? $res;
                     if ($token && isset($res['ttl'])) {
-                        $this->set($key, $token, (time() + $expiration));
+                        $this->set($key, $token, $expiration);
                     }
                 }
             }

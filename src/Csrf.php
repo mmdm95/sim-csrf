@@ -83,7 +83,7 @@ class Csrf implements ICsrf
         if (CsrfUtil::isValidTimestamp($timeout)) {
             $this->timeout = $timeout;
         } else {
-            $this->timeout = PHP_INT_MAX;
+            $this->timeout = PHP_INT_MAX / 2;
         }
         return $this;
     }
@@ -126,7 +126,7 @@ class Csrf implements ICsrf
         $name = $name ?? $this->default_name;
         $hashed = $this->hashName($name);
         if ($this->storage->has($this->_dotConcatenation($this->token_session_name, $hashed))) {
-            $token = $this->storage->get($this->_dotConcatenation($this->token_session_name, $hashed), $this->timeout);
+            $token = $this->storage->get($this->_dotConcatenation($this->token_session_name, $hashed));
             // alternative of no token in previous access
             if (is_null($token) || empty($token)) {
                 $token = $this->regenerateToken($name);

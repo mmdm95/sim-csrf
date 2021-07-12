@@ -8,6 +8,8 @@ $csrf = new Csrf();
 // get a csrf field with expiration of 10 seconds from now
 $field = $csrf->setExpiration(10)->getField('test', 'csrffield');
 
+//$csrf->clear();
+
 if(isset($_POST['submit_btn'])) {
     if(isset($_POST['csrffield'])) {
         if($csrf->validate($_POST['csrffield'], 'test')) {
@@ -19,6 +21,7 @@ if(isset($_POST['submit_btn'])) {
         echo "Form is not valid. Maybe CSRF attack!!";
     }
 }
+
 ?>
 
 <!doctype html>

@@ -58,7 +58,7 @@ class CsrfUtil
      */
     public static function isValidTimestamp($timestamp): bool
     {
-        return ($timestamp <= PHP_INT_MAX)
-            && ($timestamp >= ~PHP_INT_MAX);
+        return ($timestamp <= (PHP_INT_MAX / 2))
+            && ($timestamp >= (~PHP_INT_MAX / 2));
     }
 }
